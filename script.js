@@ -169,7 +169,7 @@ window.addEventListener("load", function () {
   const campusCenter = [121.7645, 16.9385]; // [lng, lat]
   const map = new maplibregl.Map({
     container: 'map',
-    style: 'https://api.maptiler.com/maps/streets-v2/style.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL',
+    style: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
     center: campusCenter,
     zoom: 17,
     pitch: 60,
@@ -182,54 +182,6 @@ window.addEventListener("load", function () {
 
   map.on('load', () => {
     mapReady = true;
-
-    const layers = map.getStyle().layers;
-    let labelLayerId;
-    for (let i = 0; i < layers.length; i++) {
-        if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
-            labelLayerId = layers[i].id;
-            break;
-        }
-    }
-
-    map.addSource('openmaptiles', {
-        url: 'https://api.maptiler.com/tiles/v3/tiles.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL',
-        type: 'vector'
-    });
-
-    map.addLayer(
-        {
-            'id': '3d-buildings',
-            'source': 'openmaptiles',
-            'source-layer': 'building',
-            'filter': ['==', 'extrude', 'true'],
-            'type': 'fill-extrusion',
-            'minzoom': 15,
-            'paint': {
-                'fill-extrusion-color': '#aaa',
-                'fill-extrusion-height': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    15,
-                    0,
-                    15.05,
-                    ['get', 'height']
-                ],
-                'fill-extrusion-base': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    15,
-                    0,
-                    15.05,
-                    ['get', 'min_height']
-                ],
-                'fill-extrusion-opacity': 0.6
-            }
-        },
-        labelLayerId
-    );
 
     // Run any route that was queued before the style finished loading
     if (pendingRouteFn) {
